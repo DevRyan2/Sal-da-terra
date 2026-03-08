@@ -6,19 +6,24 @@ import { getPedidos, atualizarStatusPedido, syncPedidosFirebase, hoje, formatarH
 let _pedidosAtivos = [];
 let _pollInterval  = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+// ── Exportado: chamado pelo app.js ao abrir a página ─────────
+export function initCozinha() {
   render();
   startPolling();
 
-  document.getElementById('btn-refresh-cozinha')?.addEventListener('click', () => { render(); });
+  document.getElementById('btn-refresh-cozinha')?.addEventListener('click', () => render());
 
-  // Som de alerta
   document.getElementById('btn-toggle-som')?.addEventListener('click', (e) => {
     const btn = e.currentTarget;
     btn.classList.toggle('ativo');
     btn.textContent = btn.classList.contains('ativo') ? '🔔 Som ligado' : '🔕 Som desligado';
   });
-});
+}
+
+// ── Exportado: forçar refresh sem re-inicializar ──────────────
+export function refreshCozinha() {
+  render();
+}
 
 async function render() {
   await syncPedidosFirebase(hoje()).catch(() => {});
@@ -53,7 +58,6 @@ async function render() {
 
   grid.innerHTML = [...ativos, ...prontos].map(p => renderKitchenCard(p)).join('');
 
-  // Eventos dos botões
   grid.querySelectorAll('[data-btn-status]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -64,7 +68,7 @@ async function render() {
 }
 
 function renderKitchenCard(p) {
-  const itens    = (p.itens || []).map(it => {
+  const itens = (p.itens || []).map(it => {
     const nome     = it.nome || it.descricao || '?';
     const proteina = it.proteina ? `<strong>${it.proteina}</strong>` : '';
     const acomps   = it.acompanhamentos?.length ? it.acompanhamentos.join(', ') : '';
@@ -78,8 +82,8 @@ function renderKitchenCard(p) {
     `;
   }).join('');
 
-  const tipoIcon = p.tipoEntrega === 'entrega' ? '🛵' : '🏪';
-  const minutos  = Math.floor((Date.now() - p.hora) / 60000);
+  const tipoIcon  = p.tipoEntrega === 'entrega' ? '🛵' : '🏪';
+  const minutos   = Math.floor((Date.now() - p.hora) / 60000);
   const timerColor = minutos > 20 ? 'var(--hot)' : minutos > 10 ? 'var(--accent)' : 'var(--text2)';
 
   let acoes = '';
@@ -111,15 +115,15 @@ function renderKitchenCard(p) {
 
 function startPolling() {
   if (_pollInterval) clearInterval(_pollInterval);
-  _pollInterval = setInterval(render, 10000); // Atualiza a cada 10s
+  _pollInterval = setInterval(render, 10000);
 }
 
 function alertarNovoPedido() {
   const somLigado = document.getElementById('btn-toggle-som')?.classList.contains('ativo');
   if (somLigado) {
     try {
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
+      const ctx  = new AudioContext();
+      const osc  = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -131,7 +135,6 @@ function alertarNovoPedido() {
       osc.stop(ctx.currentTime + 0.4);
     } catch {}
   }
-  // Flash visual
   document.body.style.outline = '4px solid var(--green)';
   setTimeout(() => document.body.style.outline = '', 600);
 }

@@ -3,179 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Sistema Restaurante</title>
-
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/print.css">
-
 <style>
-
 .page{display:none}
 .page.active{display:block}
-
 body{overflow-x:hidden}
 
 .kitchen-topbar{
-position:sticky;
-top:0;
-z-index:100;
-background:var(--card);
-border-bottom:1px solid var(--border);
-padding:12px 20px;
-display:flex;
-align-items:center;
-gap:16px
-}
-
+position:sticky;top:0;z-index:100;
+background:var(--card);border-bottom:1px solid var(--border);
+padding:12px 20px;display:flex;align-items:center;gap:16px}
 .kitchen-title{
-font-family:'Barlow Condensed',sans-serif;
-font-size:1.4rem;
-font-weight:800;
-text-transform:uppercase;
-letter-spacing:.05em;
-color:var(--accent)
-}
-
-#cozinha-counter{
-font-family:'JetBrains Mono',monospace;
-font-size:.9rem;
-color:var(--text2)
-}
-
+font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;
+font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+#cozinha-counter{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--text2)}
 .btn-toggle-som{
-padding:6px 14px;
-border-radius:var(--r-sm);
-background:var(--card2);
-border:1px solid var(--border2);
-color:var(--text2);
-cursor:pointer;
-font-size:.85rem
-}
-
-.btn-toggle-som.ativo{
-background:rgba(245,166,35,.15);
-border-color:var(--accent);
-color:var(--accent)
-}
-
+padding:6px 14px;border-radius:var(--r-sm);background:var(--card2);
+border:1px solid var(--border2);color:var(--text2);cursor:pointer;font-size:.85rem}
+.btn-toggle-som.ativo{background:rgba(245,166,35,.15);border-color:var(--accent);color:var(--accent)}
 .auto-badge{
-font-size:.72rem;
-color:var(--green);
-font-family:'JetBrains Mono',monospace;
-background:rgba(28,184,106,.12);
-border:1px solid rgba(28,184,106,.3);
-padding:2px 8px;
-border-radius:99px
-}
+font-size:.72rem;color:var(--green);font-family:'JetBrains Mono',monospace;
+background:rgba(28,184,106,.12);border:1px solid rgba(28,184,106,.3);
+padding:2px 8px;border-radius:99px}
 
 .stats-topbar{
-position:sticky;
-top:0;
-z-index:100;
-background:var(--card);
-border-bottom:1px solid var(--border);
-padding:12px 20px;
-display:flex;
-align-items:center;
-gap:16px
-}
-
+position:sticky;top:0;z-index:100;background:var(--card);
+border-bottom:1px solid var(--border);padding:12px 20px;
+display:flex;align-items:center;gap:16px}
 .stats-title{
-font-family:'Barlow Condensed',sans-serif;
-font-size:1.4rem;
-font-weight:800;
-text-transform:uppercase;
-letter-spacing:.05em;
-color:var(--accent)
-}
-
-.stats-body{
-padding:20px;
-max-width:1100px;
-margin:0 auto;
-display:flex;
-flex-direction:column;
-gap:20px
-}
-
-.stats-grid-2{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:16px
-}
-
+font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;
+font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.stats-body{padding:20px;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.stats-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 </style>
-
 </head>
 <body>
-
 
 <!-- ================= SISTEMA ================= -->
 <section id="page-app" class="page active">
 
 <div id="nota-impressao"></div>
-
 <div id="toast-container"></div>
 
 <div id="app">
+  <header class="topbar">
+    <div class="topbar-logo">Restaurante</div>
+    <nav class="topbar-tabs">
+      <button class="tab-btn active" data-tab="quentinha">🍱 Quentinha</button>
+      <button class="tab-btn" data-tab="prato">🍽️ Prato Feito</button>
+      <button class="tab-btn" data-tab="balcao">🏪 Balcão</button>
+    </nav>
+    <div class="topbar-actions">
+      <div class="topbar-clock" id="topbar-clock">--:--:--</div>
+      <button class="btn-icon" id="btn-abrir-stats" title="Estatísticas">📊</button>
+      <button class="btn-icon" id="btn-abrir-cozinha" title="Cozinha">👨‍🍳</button>
+      <button class="btn-icon" id="btn-config-restaurante">⚙️</button>
+    </div>
+  </header>
 
-<header class="topbar">
-
-<div class="topbar-logo">Restaurante</div>
-
-<nav class="topbar-tabs">
-<button class="tab-btn active" data-tab="quentinha">🍱 Quentinha</button>
-<button class="tab-btn" data-tab="prato">🍽️ Prato Feito</button>
-<button class="tab-btn" data-tab="balcao">🏪 Balcão</button>
-</nav>
-
-<div class="topbar-actions">
-
-<div class="topbar-clock" id="topbar-clock">--:--:--</div>
-
-<button class="btn-icon" onclick="openPage('stats')" title="Estatísticas">📊</button>
-
-<button class="btn-icon" onclick="openPage('cozinha')" title="Cozinha">👨‍🍳</button>
-
-<button class="btn-icon" id="btn-config-restaurante">⚙️</button>
-
+  <div class="main-content">
+    <div class="panel-left">
+      <div id="tab-quentinha" class="tab-content"></div>
+      <div id="tab-prato" class="tab-content hidden"></div>
+      <div id="tab-balcao" class="tab-content hidden"></div>
+    </div>
+    <div class="panel-right">
+      <div id="cart-sidebar" style="display:flex;flex-direction:column;flex:1;border-bottom:1px solid var(--border)">
+        <div class="orders-sidebar-header">
+          <div class="orders-sidebar-title">🛒 Carrinho</div>
+        </div>
+        <div class="empty-state" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div class="ico">🛒</div>
+          <p>Selecione uma aba para começar</p>
+        </div>
+      </div>
+      <div id="sidebar-pedidos" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+    </div>
+  </div>
 </div>
 
-</header>
+</section>
 
-<div class="main-content">
 
-<div class="panel-left">
+<!-- ================= COZINHA ================= -->
+<section id="page-cozinha" class="page">
 
-<div id="tab-quentinha" class="tab-content"></div>
-<div id="tab-prato" class="tab-content hidden"></div>
-<div id="tab-balcao" class="tab-content hidden"></div>
-
+<div class="kitchen-topbar">
+  <div class="kitchen-title">👨‍🍳 Cozinha</div>
+  <span id="cozinha-counter"></span>
+  <span class="auto-badge">● auto</span>
+  <button class="btn-toggle-som" id="btn-toggle-som">🔕 Som desligado</button>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="btn-icon" id="btn-refresh-cozinha" title="Atualizar">↻</button>
+    <button class="btn-icon" id="btn-voltar-cozinha" title="Voltar">⬅</button>
+  </div>
 </div>
 
-<div class="panel-right">
-
-<div id="cart-sidebar" style="display:flex;flex-direction:column;flex:1;border-bottom:1px solid var(--border)">
-
-<div class="orders-sidebar-header">
-<div class="orders-sidebar-title">🛒 Carrinho</div>
-</div>
-
-<div class="empty-state" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
-<div class="ico">🛒</div>
-<p>Selecione uma aba para começar</p>
-</div>
-
-</div>
-
-<div id="sidebar-pedidos" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
-
-</div>
-
-</div>
-
-</div>
+<div id="kitchen-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:20px"></div>
 
 </section>
 
@@ -184,117 +110,58 @@ gap:16px
 <section id="page-stats" class="page">
 
 <div class="stats-topbar">
-
-<div class="stats-title">📊 Estatísticas</div>
-
-<div style="display:flex;align-items:center;gap:8px;margin-left:auto">
-
-<label style="font-size:.82rem;color:var(--text2)">Data:</label>
-
-<input type="date" class="input" id="stats-date" style="width:160px">
-
-<button class="btn-icon" onclick="openPage('app')">⬅</button>
-
+  <div class="stats-title">📊 Estatísticas</div>
+  <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+    <label style="font-size:.82rem;color:var(--text2)">Data:</label>
+    <input type="date" class="input" id="stats-date" style="width:160px">
+    <button class="btn-icon" id="btn-voltar-stats">⬅</button>
+  </div>
 </div>
-
-</div>
-
 
 <div class="stats-body">
 
-<!-- RESUMO -->
-<div>
+  <div>
+    <div class="card-title mb-2">Resumo do dia</div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-label">💰 Faturamento</div><div class="stat-val" id="stat-faturamento">R$ 0,00</div></div>
+      <div class="stat-box"><div class="stat-label">📋 Pedidos</div><div class="stat-val" id="stat-pedidos">0</div></div>
+      <div class="stat-box"><div class="stat-label">🎯 Ticket médio</div><div class="stat-val" id="stat-ticket">R$ 0,00</div></div>
+      <div class="stat-box"><div class="stat-label">✕ Cancelados</div><div class="stat-val" id="stat-cancelados">0</div></div>
+      <div class="stat-box"><div class="stat-label">🛵 Entregas</div><div class="stat-val" id="stat-entregas">0</div></div>
+      <div class="stat-box"><div class="stat-label">🏪 Retiradas</div><div class="stat-val" id="stat-retiradas">0</div></div>
+    </div>
+  </div>
 
-<div class="card-title mb-2">Resumo do dia</div>
+  <div class="stats-grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Ranking de Proteínas</div></div>
+      <div id="proteinas-ranking"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Itens Mais Vendidos</div></div>
+      <div id="itens-ranking"></div>
+    </div>
+  </div>
 
-<div class="stat-grid">
+  <div class="stats-grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Formas de Pagamento</div></div>
+      <div id="formas-pagamento"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Entregas por Bairro</div></div>
+      <div id="bairros-ranking"></div>
+    </div>
+  </div>
 
-<div class="stat-box">
-<div class="stat-label">💰 Faturamento</div>
-<div class="stat-val" id="stat-faturamento">R$ 0,00</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-label">📋 Pedidos</div>
-<div class="stat-val" id="stat-pedidos">0</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-label">🎯 Ticket médio</div>
-<div class="stat-val" id="stat-ticket">R$ 0,00</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-label">✕ Cancelados</div>
-<div class="stat-val" id="stat-cancelados">0</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-label">🛵 Entregas</div>
-<div class="stat-val" id="stat-entregas">0</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-label">🏪 Retiradas</div>
-<div class="stat-val" id="stat-retiradas">0</div>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- RANKING -->
-<div class="stats-grid-2">
-
-<div class="card">
-<div class="card-header">
-<div class="card-title">Ranking de Proteínas</div>
-</div>
-<div id="proteinas-ranking"></div>
-</div>
-
-<div class="card">
-<div class="card-header">
-<div class="card-title">Itens Mais Vendidos</div>
-</div>
-<div id="itens-ranking"></div>
-</div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Todos os Pedidos do Dia</div></div>
+    <div id="lista-pedidos-stats"></div>
+  </div>
 
 </div>
-
-
-<!-- PAGAMENTO / BAIRRO -->
-<div class="stats-grid-2">
-
-<div class="card">
-<div class="card-header">
-<div class="card-title">Formas de Pagamento</div>
-</div>
-<div id="formas-pagamento"></div>
-</div>
-
-<div class="card">
-<div class="card-header">
-<div class="card-title">Entregas por Bairro</div>
-</div>
-<div id="bairros-ranking"></div>
-</div>
-
-</div>
-
-
-<!-- LISTA PEDIDOS -->
-<div class="card">
-
-<div class="card-header">
-<div class="card-title">Todos os Pedidos do Dia</div>
-</div>
-
-<div id="lista-pedidos-stats"></div>
-
-</div>
-
-</div>
-
 </section>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

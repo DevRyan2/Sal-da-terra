@@ -2,7 +2,7 @@
 //  pedido-list.js — Sidebar da lista de pedidos do dia
 // ============================================================
 import { getPedidos, atualizarStatusPedido, cancelarPedido, formatarMoeda, formatarHora, hoje } from '../db.js';
-import { imprimirPedido } from '../impressao.js';
+import { imprimirPedido } from './impressao.js';
 
 let _onSelect = null;
 let _selectedId = null;

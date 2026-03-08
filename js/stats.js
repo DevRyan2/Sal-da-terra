@@ -1,23 +1,14 @@
 // ============================================================
 //  stats.js — Estatísticas
 // ============================================================
-import { getPedidos, getEstatisticasDia, formatarMoeda, hoje, formatarData } from './db.js';
+import { getPedidos, getEstatisticasDia, formatarMoeda, hoje } from './db.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderStats(hoje());
+// ── Exportado: chamado pelo app.js ao abrir a página ─────────
+export function renderStats(data) {
+  data = data || hoje();
 
-  document.getElementById('stats-date')?.addEventListener('change', e => {
-    renderStats(e.target.value);
-  });
-
-  // Set date input to today
-  const dateEl = document.getElementById('stats-date');
-  if (dateEl) dateEl.value = hoje();
-});
-
-function renderStats(data) {
-  const stats   = getEstatisticasDia(data);
-  const pedidos = getPedidos(data).filter(p => p.status !== 'cancelado');
+  const stats      = getEstatisticasDia(data);
+  const pedidos    = getPedidos(data).filter(p => p.status !== 'cancelado');
   const cancelados = getPedidos(data).filter(p => p.status === 'cancelado').length;
 
   // KPIs
@@ -29,9 +20,7 @@ function renderStats(data) {
   document.getElementById('stat-retiradas').textContent   = stats.retiradas;
 
   // Proteínas ranking
-  const protRank = Object.entries(stats.proteinas)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10);
+  const protRank = Object.entries(stats.proteinas).sort((a, b) => b[1] - a[1]).slice(0, 10);
   document.getElementById('proteinas-ranking').innerHTML = protRank.length === 0
     ? '<div style="color:var(--text3);font-size:.88rem">Nenhum dado</div>'
     : protRank.map(([nome, qtd], i) => `
@@ -46,9 +35,7 @@ function renderStats(data) {
     `).join('');
 
   // Itens mais vendidos
-  const itensRank = Object.entries(stats.itens)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 8);
+  const itensRank = Object.entries(stats.itens).sort((a, b) => b[1] - a[1]).slice(0, 8);
   document.getElementById('itens-ranking').innerHTML = itensRank.length === 0
     ? '<div style="color:var(--text3);font-size:.88rem">Nenhum dado</div>'
     : itensRank.map(([nome, qtd]) => `
@@ -83,7 +70,7 @@ function renderStats(data) {
   // Lista de pedidos
   document.getElementById('lista-pedidos-stats').innerHTML = pedidos.length === 0
     ? '<div style="color:var(--text3);font-size:.88rem;text-align:center;padding:20px">Sem pedidos para esta data</div>'
-    : pedidos.reverse().map(p => `
+    : [...pedidos].reverse().map(p => `
       <div style="display:flex;align-items:center;gap:10px;padding:8px;border-bottom:1px solid var(--border);font-size:.88rem">
         <span style="font-family:'JetBrains Mono',monospace;color:var(--text3)">#${p.numero}</span>
         <span style="flex:1;font-weight:600">${p.cliente?.nome || 'Balcão'}</span>

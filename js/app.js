@@ -3,12 +3,22 @@
 // ============================================================
 import { getConfig, saveConfig, hoje, formatarMoeda } from './db.js';
 import { toast } from './utils.js';
-import { renderQuentinha } from './tabs.js';
-import { renderPrato, wirePratoEvents } from './tabs.js';
-import { renderBalcao } from './tabs.js';
+import { renderQuentinha, renderPrato, wirePratoEvents, renderBalcao } from './tabs.js';
 import { initSidebar, refreshSidebar } from './modules/pedido-list.js';
 
 let _tabAtual = 'quentinha';
+let _cozinhaInited = false;
+let _statsInited = false;
+
+// ── openPage — chamada pelos botões do topbar ─────────────────
+window.openPage = function(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const section = document.getElementById(`page-${page}`);
+  if (section) section.classList.add('active');
+
+  if (page === 'cozinha') _initCozinha();
+  if (page === 'stats')   _initStats();
+};
 
 // ── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,10 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Botões do topbar
+  // Botões do topbar — abrem as páginas internas
+  document.getElementById('btn-abrir-cozinha')?.addEventListener('click', () => openPage('cozinha'));
+  document.getElementById('btn-abrir-stats')?.addEventListener('click',   () => openPage('stats'));
+
+  // Botões voltar
+  document.getElementById('btn-voltar-cozinha')?.addEventListener('click', () => openPage('app'));
+  document.getElementById('btn-voltar-stats')?.addEventListener('click',   () => openPage('app'));
+
+  // Config do restaurante
   document.getElementById('btn-config-restaurante')?.addEventListener('click', abrirConfigRestaurante);
-  document.getElementById('btn-abrir-cozinha')?.addEventListener('click', () => window.open('cozinha.html', '_blank'));
-  document.getElementById('btn-abrir-stats')?.addEventListener('click', () => window.open('stats.html', '_blank'));
+
+  // Data inicial do stats
+  const dateEl = document.getElementById('stats-date');
+  if (dateEl) dateEl.value = hoje();
 
   // Iniciar na aba quentinha
   switchTab('quentinha');
@@ -50,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function switchTab(tab) {
   _tabAtual = tab;
-
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
 
@@ -60,6 +79,34 @@ function switchTab(tab) {
   if (tab === 'quentinha') renderQuentinha();
   if (tab === 'prato')     { renderPrato(); wirePratoEvents(); }
   if (tab === 'balcao')    renderBalcao();
+}
+
+// ── Lazy init da Cozinha ──────────────────────────────────────
+async function _initCozinha() {
+  if (_cozinhaInited) {
+    // Já iniciada: só forçar refresh
+    const mod = await import('./cozinha.js');
+    mod.refreshCozinha?.();
+    return;
+  }
+  _cozinhaInited = true;
+  const mod = await import('./cozinha.js');
+  mod.initCozinha?.();
+}
+
+// ── Lazy init de Stats ────────────────────────────────────────
+async function _initStats() {
+  const mod = await import('./stats.js');
+  const dateVal = document.getElementById('stats-date')?.value || hoje();
+  mod.renderStats?.(dateVal);
+
+  // Garante que o listener de data funcione sempre
+  if (!_statsInited) {
+    _statsInited = true;
+    document.getElementById('stats-date')?.addEventListener('change', e => {
+      mod.renderStats?.(e.target.value);
+    });
+  }
 }
 
 // ── Modal de configuração do restaurante ─────────────────────
@@ -129,17 +176,13 @@ function abrirConfigRestaurante() {
 
   overlay.classList.remove('hidden');
   const fechar = () => overlay.classList.add('hidden');
-  overlay.querySelector('#close-cfg').onclick   = fechar;
-  overlay.querySelector('#cancel-cfg').onclick  = fechar;
+  overlay.querySelector('#close-cfg').onclick  = fechar;
+  overlay.querySelector('#cancel-cfg').onclick = fechar;
   overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });
 
   overlay.querySelectorAll('.remove-bairro').forEach(btn => {
-    btn.addEventListener('click', () => {
-      cfg.bairros.splice(parseInt(btn.dataset.idx), 1);
-      abrirConfigRestaurante();
-    });
+    btn.addEventListener('click', () => { cfg.bairros.splice(parseInt(btn.dataset.idx), 1); abrirConfigRestaurante(); });
   });
-
   overlay.querySelector('#btn-add-bairro')?.addEventListener('click', () => {
     const li = document.createElement('div');
     li.className = 'flex gap-2 items-center';
@@ -147,11 +190,9 @@ function abrirConfigRestaurante() {
     overlay.querySelector('#lista-bairros').appendChild(li);
     li.querySelector('.remove-bairro-new').onclick = () => li.remove();
   });
-
   overlay.querySelectorAll('.remove-prot').forEach(btn => {
     btn.addEventListener('click', () => { cfg.proteinas.splice(parseInt(btn.dataset.idx), 1); abrirConfigRestaurante(); });
   });
-
   overlay.querySelector('#btn-add-prot')?.addEventListener('click', () => {
     const inp = overlay.querySelector('#nova-proteina');
     const v   = inp.value.trim();
@@ -168,7 +209,6 @@ function abrirConfigRestaurante() {
       pixChave:  overlay.querySelector('#cfg-pix').value.trim(),
       pixNome:   overlay.querySelector('#cfg-pixnome').value.trim(),
     };
-
     const bairroEls = overlay.querySelectorAll('#lista-bairros > div');
     novoCfg.bairros = [];
     bairroEls.forEach(row => {
@@ -177,7 +217,6 @@ function abrirConfigRestaurante() {
       const taxa   = parseFloat(inputs[1]?.value || 0);
       if (nome) novoCfg.bairros.push({ nome, taxa });
     });
-
     saveConfig(novoCfg);
     document.querySelector('.topbar-logo').innerHTML = `${novoCfg.nome} <span>${novoCfg.subtitulo || ''}</span>`;
     document.title = novoCfg.nome;
