@@ -1,7 +1,7 @@
 // ============================================================
 //  cozinha.js — Painel da Cozinha
 // ============================================================
-import { getPedidos, atualizarStatusPedido, syncPedidosFirebase, hoje, formatarHora } from '../db.js';
+import { getPedidos, atualizarStatusPedido, syncPedidosFirebase, hoje, formatarHora } from './db.js';
 
 let _pedidosAtivos = [];
 let _pollInterval  = null;

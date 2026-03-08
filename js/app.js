@@ -3,10 +3,10 @@
 // ============================================================
 import { getConfig, saveConfig, hoje, formatarMoeda } from './db.js';
 import { toast } from './utils.js';
-import { renderQuentinha } from './tabs/quentinha.js';
-import { renderPrato, wirePratoEvents } from './tabs/prato.js';
-import { renderBalcao } from './tabs/balcao.js';
-import { initSidebar, refreshSidebar } from './modules/pedido-list.js';
+import { renderQuentinha } from './tabs.js';
+import { renderPrato, wirePratoEvents } from './tabs.js';
+import { renderBalcao } from './tabs.js';
+import { initSidebar, refreshSidebar } from './pedido-list.js';
 
 let _tabAtual = 'quentinha';
 
