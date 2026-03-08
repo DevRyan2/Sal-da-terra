@@ -2,23 +2,13 @@
 //  app.js — Controlador principal
 // ============================================================
 import { getConfig, saveConfig, hoje, formatarMoeda } from './db.js';
+import { toast } from './utils.js';
 import { renderQuentinha } from './tabs/quentinha.js';
 import { renderPrato, wirePratoEvents } from './tabs/prato.js';
 import { renderBalcao } from './tabs/balcao.js';
 import { initSidebar, refreshSidebar } from './modules/pedido-list.js';
 
 let _tabAtual = 'quentinha';
-
-// ── Toast global ─────────────────────────────────────────────
-export function toast(msg, tipo = 'success') {
-  const c = document.getElementById('toast-container');
-  if (!c) return;
-  const t = document.createElement('div');
-  t.className = `toast toast-${tipo}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => { t.style.animation = 'toast-out .2s ease forwards'; setTimeout(() => t.remove(), 200); }, 2800);
-}
 
 // ── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -42,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebarEl = document.getElementById('sidebar-pedidos');
   if (sidebarEl) {
     initSidebar(pedido => {
-      // ao clicar num pedido, mostra detalhes (pode expandir depois)
       console.log('Pedido selecionado:', pedido);
     });
   }
@@ -62,17 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
 function switchTab(tab) {
   _tabAtual = tab;
 
-  // Atualizar botões
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-
-  // Esconder todas as abas
   document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
 
-  // Mostrar a aba atual
   const el = document.getElementById(`tab-${tab}`);
   if (el) el.classList.remove('hidden');
 
-  // Renderizar conteúdo
   if (tab === 'quentinha') renderQuentinha();
   if (tab === 'prato')     { renderPrato(); wirePratoEvents(); }
   if (tab === 'balcao')    renderBalcao();
@@ -149,37 +133,31 @@ function abrirConfigRestaurante() {
   overlay.querySelector('#cancel-cfg').onclick  = fechar;
   overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });
 
-  // Remover bairro
   overlay.querySelectorAll('.remove-bairro').forEach(btn => {
     btn.addEventListener('click', () => {
       cfg.bairros.splice(parseInt(btn.dataset.idx), 1);
-      abrirConfigRestaurante(); // re-render
+      abrirConfigRestaurante();
     });
   });
 
-  // Adicionar bairro
   overlay.querySelector('#btn-add-bairro')?.addEventListener('click', () => {
-    const items = overlay.querySelectorAll('#lista-bairros > div');
-    const li    = document.createElement('div');
+    const li = document.createElement('div');
     li.className = 'flex gap-2 items-center';
     li.innerHTML = `<input class="input" style="flex:2" placeholder="Nome do bairro"><input class="input" style="flex:1;max-width:100px" type="number" placeholder="Taxa R$"><button class="btn-icon remove-bairro-new">✕</button>`;
     overlay.querySelector('#lista-bairros').appendChild(li);
     li.querySelector('.remove-bairro-new').onclick = () => li.remove();
   });
 
-  // Remover proteína
   overlay.querySelectorAll('.remove-prot').forEach(btn => {
     btn.addEventListener('click', () => { cfg.proteinas.splice(parseInt(btn.dataset.idx), 1); abrirConfigRestaurante(); });
   });
 
-  // Adicionar proteína
   overlay.querySelector('#btn-add-prot')?.addEventListener('click', () => {
     const inp = overlay.querySelector('#nova-proteina');
     const v   = inp.value.trim();
     if (v) { cfg.proteinas.push(v); abrirConfigRestaurante(); }
   });
 
-  // Salvar
   overlay.querySelector('#save-cfg').onclick = () => {
     const novoCfg = {
       ...cfg,
@@ -191,7 +169,6 @@ function abrirConfigRestaurante() {
       pixNome:   overlay.querySelector('#cfg-pixnome').value.trim(),
     };
 
-    // Bairros
     const bairroEls = overlay.querySelectorAll('#lista-bairros > div');
     novoCfg.bairros = [];
     bairroEls.forEach(row => {
@@ -208,6 +185,3 @@ function abrirConfigRestaurante() {
     toast('Configurações salvas!', 'success');
   };
 }
-
-// Expor toast globalmente para módulos que importam de app.js
-window._toast = toast;

@@ -5,7 +5,7 @@ import { getCardapio, saveCardapio, novoPedido, formatarMoeda, registrarPedidoNo
 import { abrirModalCliente } from '../modules/cliente.js';
 import { refreshSidebar } from '../modules/pedido-list.js';
 import { imprimirPedido } from '../modules/impressao.js';
-import { toast } from '../app.js';
+import { toast } from '../utils.js';
 
 const OBS_RAPIDAS = ['Sem cebola','Sem alho','Sem pimenta','Pouco sal','Bem passado','Mal passado','Capricha','Porção extra'];
 

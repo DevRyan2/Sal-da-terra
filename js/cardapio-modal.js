@@ -1,8 +1,8 @@
 // ============================================================
 //  cardapio-modal.js — Modal de configuração do cardápio do dia
 // ============================================================
-import { getCardapio, saveCardapio, getConfig, hoje, formatarMoeda } from './db.js';
-import { toast } from '../app.js';
+import { getCardapio, saveCardapio, getConfig, hoje, formatarMoeda } from '../db.js';
+import { toast } from '../utils.js';
 
 export function abrirModalCardapio(onClose) {
   const cardapio = getCardapio(hoje());
