@@ -3,12 +3,12 @@
 // ============================================================
 
 export const RESTAURANTE = {
-  nome: "Restaurante da Vó",
-  subtitulo: "Comida caseira todo dia",
+  nome: "Restaurante Sal da Terra",
+  subtitulo: "Comida caseira de terça a sabado",
   telefone: "(21) 99999-9999",
   endereco: "Rua das Flores, 123 — Centro",
   pixChave: "11.222.333/0001-44",    // CPF, CNPJ, email ou telefone
-  pixNome: "Restaurante da Vó",
+  pixNome: "Restaurante Sal da Terra",
 };
 
 // ============================================================
@@ -83,6 +83,6 @@ export const BALCAO_PADRAO = [
 // ============================================================
 export const TAMANHOS_QUENTINHA = [
   { sigla: "P", label: "Pequena", preco: 15 },
-  { sigla: "M", label: "Média",   preco: 20 },
-  { sigla: "G", label: "Grande",  preco: 25 },
+  { sigla: "M", label: "Média",   preco: 18 },
+  { sigla: "G", label: "Grande",  preco: 22 },
 ];
