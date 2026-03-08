@@ -17,13 +17,27 @@ function crc16(str) {
 }
 
 function campo(id, valor) {
-  return id + String(valor.length).padStart(2, '0') + valor;
+  const len = String(valor.length).padStart(2, '0');
+  return id + len + valor;
 }
 
-function gerarPixPayload(chave, nome, cidade, valor) {
-  const nomeLimpo   = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 ]/g, '').slice(0, 25).trim();
-  const cidadeLimpa = (cidade || 'Brasil').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 ]/g, '').slice(0, 15).trim() || 'Brasil';
-  const merchantAccount = campo('00', 'BR.GOV.BCB.PIX') + campo('01', chave);
+function limpar(str, max) {
+  return (str || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')   // remove acentos
+    .replace(/[^a-zA-Z0-9 ]/g, '')    // só letras, números e espaço
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, max);
+}
+
+function gerarPixPayload(chave, nome, valor) {
+  // Cidade: pega só a última parte do endereço ou usa "Brasil"
+  const nomeLimpo   = limpar(nome, 25) || 'Restaurante';
+  const cidadeLimpa = 'Brasil'; // campo obrigatório, valor genérico válido
+
+  const merchantAccount = campo('00', 'BR.GOV.BCB.PIX') + campo('01', chave.trim());
+
   let payload =
     campo('00', '01') +
     campo('26', merchantAccount) +
@@ -35,28 +49,34 @@ function gerarPixPayload(chave, nome, cidade, valor) {
     campo('60', cidadeLimpa) +
     campo('62', campo('05', '***')) +
     '6304';
+
   return payload + crc16(payload);
 }
 
-function gerarQRDataURL(texto) {
-  return new Promise(resolve => {
-    const div = document.createElement('div');
-    div.style.cssText = 'position:absolute;left:-9999px;top:-9999px';
-    document.body.appendChild(div);
-    try {
-      // eslint-disable-next-line no-undef
-      new QRCode(div, { text: texto, width: 200, height: 200, correctLevel: QRCode.CorrectLevel.M });
-      const canvas = div.querySelector('canvas');
-      const dataURL = canvas ? canvas.toDataURL('image/png') : null;
-      document.body.removeChild(div);
-      resolve(dataURL);
-    } catch (e) {
-      if (div.parentNode) document.body.removeChild(div);
-      resolve(null);
-    }
-  });
+// ── Gera QR Code como SVG ────────────────────────────────────
+function gerarQRSVG(texto) {
+  try {
+    // eslint-disable-next-line no-undef
+    const qr = qrcode(0, 'M');
+    qr.addData(texto);
+    qr.make();
+
+    // margin=4 módulos (quiet zone obrigatória pelo padrão QR)
+    // cellSize=5 para ficar legível na impressão
+    let svg = qr.createSvgTag(5, 4);
+
+    // Substituir tamanho fixo por 100% para caber no container
+    svg = svg.replace(/width="[^"]*"/, 'width="100%"')
+             .replace(/height="[^"]*"/, 'height="auto"');
+
+    return svg;
+  } catch (e) {
+    console.error('QR erro:', e);
+    return null;
+  }
 }
 
+// ── Impressão principal ───────────────────────────────────────
 export async function imprimirPedido(pedido) {
   const cfg = getConfig();
   const el  = document.getElementById('nota-impressao');
@@ -64,14 +84,14 @@ export async function imprimirPedido(pedido) {
 
   const itens = (pedido.itens || []).map(it => {
     const nome = it.nome || it.descricao || '?';
-    const sub  = (it.qty || 1) * (it.preco || 0);
+    const sub  = Math.round((it.qty || 1) * (it.preco || 0) * 100) / 100;
     return `
       <div class="nota-linha">
         <span class="nome">${it.qty || 1}x ${nome}</span>
         <span class="val">${formatarMoeda(sub)}</span>
       </div>
-      ${it.proteina ? `<div style="font-size:10px;padding-left:10px">↳ ${it.proteina}</div>` : ''}
-      ${it.acompanhamentos?.length ? `<div style="font-size:10px;padding-left:10px">↳ ${it.acompanhamentos.join(', ')}</div>` : ''}
+      ${it.proteina ? `<div style="font-size:10px;padding-left:10px">- ${it.proteina}</div>` : ''}
+      ${it.acompanhamentos?.length ? `<div style="font-size:10px;padding-left:10px">- ${it.acompanhamentos.join(', ')}</div>` : ''}
       ${it.obs ? `<div style="font-size:10px;padding-left:10px;font-style:italic">Obs: ${it.obs}</div>` : ''}
     `;
   }).join('');
@@ -82,25 +102,27 @@ export async function imprimirPedido(pedido) {
        <div class="nota-linha nota-bold"><span class="nome">Troco</span><span class="val">${formatarMoeda(pedido.troco)}</span></div>`
     : '';
 
+  // ── QR PIX com valor embutido ──────────────────────────────
   let pixBox = '';
   if (cfg.pixChave && pedido.formaPagamento === 'Pix' && pedido.total > 0) {
-    const payload   = gerarPixPayload(cfg.pixChave, cfg.pixNome || cfg.nome, cfg.endereco || 'Brasil', pedido.total);
-    const qrDataURL = await gerarQRDataURL(payload);
-    if (qrDataURL) {
+    const payload = gerarPixPayload(cfg.pixChave, cfg.pixNome || cfg.nome, pedido.total);
+    const svg     = gerarQRSVG(payload);
+
+    if (svg) {
       pixBox = `
-        <div class="nota-pix-box">
-          <div class="nota-bold" style="font-size:12px">PAGAR VIA PIX</div>
-          <div style="font-size:9px;margin:2px 0">${cfg.pixChave}</div>
-          <img src="${qrDataURL}" style="width:160px;height:160px;margin:6px auto;display:block">
-          <div class="nota-bold nota-grande">${formatarMoeda(pedido.total)}</div>
-          <div style="font-size:8px;margin-top:2px">Escaneie — valor ja preenchido automaticamente</div>
+        <div style="border:2px solid #000;padding:8px;margin:8px 0;text-align:center;">
+          <div style="font-weight:bold;font-size:12px;margin-bottom:4px">PAGAR VIA PIX</div>
+          <div style="font-size:9px;margin-bottom:6px;word-break:break-all">${cfg.pixChave}</div>
+          <div style="width:180px;margin:0 auto;display:block;line-height:0">${svg}</div>
+          <div style="font-weight:bold;font-size:14px;margin-top:6px">${formatarMoeda(pedido.total)}</div>
+          <div style="font-size:8px;margin-top:2px;color:#333">Escaneie — valor ja preenchido</div>
         </div>`;
     } else {
       pixBox = `
-        <div class="nota-pix-box">
-          <div class="nota-bold">PAGAR VIA PIX</div>
-          <div>${cfg.pixChave}</div>
-          <div class="nota-bold nota-grande">${formatarMoeda(pedido.total)}</div>
+        <div style="border:2px solid #000;padding:8px;margin:8px 0;text-align:center;">
+          <div style="font-weight:bold">PAGAR VIA PIX</div>
+          <div style="word-break:break-all">${cfg.pixChave}</div>
+          <div style="font-weight:bold;font-size:14px">${formatarMoeda(pedido.total)}</div>
         </div>`;
     }
   }
@@ -111,36 +133,42 @@ export async function imprimirPedido(pedido) {
     <div class="nota-center">${cfg.telefone}</div>
     <div class="nota-center" style="font-size:9px">${cfg.endereco}</div>
     <div class="nota-divider"></div>
+
     <div class="nota-linha">
       <span class="nota-bold">Pedido #${pedido.numero}</span>
       <span>${formatarHora(pedido.hora)}</span>
     </div>
-    <div style="font-size:10px">${new Date(pedido.hora).toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric' })}</div>
+    <div style="font-size:10px">${new Date(pedido.hora).toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})}</div>
     <div class="nota-divider"></div>
+
     <div class="nota-bold">CLIENTE</div>
     <div>${pedido.cliente?.nome || 'Sem identificacao'}</div>
     ${pedido.cliente?.telefone ? `<div>${pedido.cliente.telefone}</div>` : ''}
     ${entrega && pedido.endereco ? `
-      <div class="nota-space"></div>
-      <div class="nota-bold">ENDERECO DE ENTREGA</div>
+      <div style="height:4px"></div>
+      <div class="nota-bold">ENDERECO</div>
       <div>${pedido.endereco.logradouro}${pedido.endereco.numero ? ', '+pedido.endereco.numero : ''}</div>
       ${pedido.endereco.complemento ? `<div>${pedido.endereco.complemento}</div>` : ''}
       <div>${pedido.endereco.bairro}</div>
       ${pedido.endereco.referencia ? `<div style="font-size:10px">Ref: ${pedido.endereco.referencia}</div>` : ''}
     ` : ''}
     <div class="nota-divider"></div>
+
     <div class="nota-bold">ITENS</div>
-    <div class="nota-space"></div>
+    <div style="height:4px"></div>
     ${itens}
     <div class="nota-divider"></div>
+
     <div class="nota-linha"><span class="nome">Subtotal</span><span class="val">${formatarMoeda(pedido.subtotal || 0)}</span></div>
     ${entrega ? `<div class="nota-linha"><span class="nome">Taxa entrega (${pedido.bairro || ''})</span><span class="val">${formatarMoeda(pedido.taxaEntrega || 0)}</span></div>` : ''}
     ${(pedido.desconto||0) > 0 ? `<div class="nota-linha"><span class="nome">Desconto</span><span class="val">-${formatarMoeda(pedido.desconto)}</span></div>` : ''}
+
     <div class="nota-total-box">
       <div class="nota-linha nota-grande">
         <span>TOTAL</span><span>${formatarMoeda(pedido.total)}</span>
       </div>
     </div>
+
     <div class="nota-linha">
       <span class="nome">Pagamento</span>
       <span class="val nota-bold">${pedido.formaPagamento || '—'}</span>

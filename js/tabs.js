@@ -7,6 +7,12 @@ import { refreshSidebar } from './modules/pedido-list.js';
 import { imprimirPedido } from './modules/impressao.js';
 import { toast } from './utils.js';
 
+// ── Helper: soma em centavos para evitar bug de float ────────
+function somarPrecos(cart, getValor) {
+  return Math.round(cart.reduce((s, it) => s + Math.round((getValor(it) || 0) * 100), 0)) / 100;
+}
+
+
 // ── Quentinha ───────────────────────────────────────────────
 const OBS_RAPIDAS_QUENTINHA = ['Sem cebola','Sem alho','Sem pimenta','Pouco sal','Bem passado','Mal passado','Sem arroz','Sem feijão','Capricha no feijão','Capricha na carne'];
 
@@ -237,7 +243,7 @@ function renderCartSidebarQuentinha() {
   const sidebar = document.getElementById('cart-sidebar');
   if (!sidebar) return;
 
-  const subtotal    = _cart_quentinha.reduce((s, it) => s + it.preco * (it.qty || 1), 0);
+  const subtotal    = somarPrecos(_cart_quentinha, it => it.preco * (it.qty || 1));
   const taxaEntrega = _entrega_quentinha?.taxaEntrega || 0;
   const total       = subtotal + taxaEntrega;
 
@@ -294,7 +300,7 @@ async function confirmarPedidoQuentinha() {
   const formaPagamento = el?.querySelector('.payment-opt.selected')?.dataset.forma || '';
   if (!formaPagamento) { toast('Selecione a forma de pagamento', 'warn'); return; }
 
-  const subtotal    = _cart_quentinha.reduce((s, it) => s + it.preco * (it.qty || 1), 0);
+  const subtotal    = somarPrecos(_cart_quentinha, it => it.preco * (it.qty || 1));
   const taxaEntrega = _entrega_quentinha?.taxaEntrega || 0;
   const total       = subtotal + taxaEntrega;
 
@@ -569,7 +575,7 @@ function renderCartPrato() {
   const sidebar = document.getElementById('cart-sidebar');
   if (!sidebar) return;
 
-  const subtotal    = _cart_prato.reduce((s, it) => s + it.preco * (it.qty || 1), 0);
+  const subtotal    = somarPrecos(_cart_prato, it => it.preco * (it.qty || 1));
   const taxaEntrega = _entrega_prato?.taxaEntrega || 0;
   const total       = subtotal + taxaEntrega;
 
@@ -614,7 +620,7 @@ async function confirmarPratoPedido() {
   const formaPagamento = el?.querySelector('.payment-opt.selected')?.dataset.forma || '';
   if (!formaPagamento) { toast('Selecione a forma de pagamento', 'warn'); return; }
 
-  const subtotal = _cart_prato.reduce((s, it) => s + it.preco * (it.qty || 1), 0);
+  const subtotal = somarPrecos(_cart_prato, it => it.preco * (it.qty || 1));
   const taxaEntrega = _entrega_prato?.taxaEntrega || 0;
   const total = subtotal + taxaEntrega;
   let pagoEm = 0, troco = 0;
@@ -733,7 +739,7 @@ function renderCartBalcao() {
   const sidebar = document.getElementById('cart-sidebar');
   if (!sidebar) return;
 
-  const total = _cart_balcao.reduce((s, it) => s + it.preco * it.qty, 0);
+  const total = somarPrecos(_cart_balcao, it => it.preco * it.qty);
 
   sidebar.innerHTML = `
     <div class="orders-sidebar-header">
@@ -786,7 +792,7 @@ async function confirmarVendaBalcao() {
   const formaPagamento = el?.querySelector('.payment-opt.selected')?.dataset.forma || '';
   if (!formaPagamento) { toast('Selecione a forma de pagamento', 'warn'); return; }
 
-  const total = _cart_balcao.reduce((s, it) => s + it.preco * it.qty, 0);
+  const total = somarPrecos(_cart_balcao, it => it.preco * it.qty);
   let pagoEm = 0, troco = 0;
   if (formaPagamento === 'Dinheiro') {
     pagoEm = parseFloat(el?.querySelector('#input-pago-balcao')?.value || 0);
