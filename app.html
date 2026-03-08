@@ -180,41 +180,6 @@ gap:16px
 </section>
 
 
-<!-- ================= COZINHA ================= -->
-<section id="page-cozinha" class="page">
-
-<div class="kitchen-topbar">
-
-<div class="kitchen-title">👨‍🍳 Cozinha</div>
-
-<div id="cozinha-counter" class="text-muted">Carregando...</div>
-
-<div class="auto-badge">⟳ Auto 10s</div>
-
-<div style="margin-left:auto;display:flex;gap:8px">
-
-<button class="btn-toggle-som" id="btn-toggle-som">🔕 Som desligado</button>
-
-<button class="btn-icon" id="btn-refresh-cozinha">↻ Atualizar</button>
-
-<button class="btn-icon" onclick="openPage('app')">⬅</button>
-
-</div>
-
-</div>
-
-<div id="kitchen-grid" class="kitchen-grid">
-
-<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text3)">
-<div style="font-size:2rem">⟳</div>
-<div style="margin-top:8px">Carregando pedidos...</div>
-</div>
-
-</div>
-
-</section>
-
-
 <!-- ================= STATS ================= -->
 <section id="page-stats" class="page">
 
@@ -237,7 +202,9 @@ gap:16px
 
 <div class="stats-body">
 
+<!-- RESUMO -->
 <div>
+
 <div class="card-title mb-2">Resumo do dia</div>
 
 <div class="stat-grid">
@@ -276,31 +243,58 @@ gap:16px
 
 </div>
 
+
+<!-- RANKING -->
+<div class="stats-grid-2">
+
+<div class="card">
+<div class="card-header">
+<div class="card-title">Ranking de Proteínas</div>
+</div>
+<div id="proteinas-ranking"></div>
+</div>
+
+<div class="card">
+<div class="card-header">
+<div class="card-title">Itens Mais Vendidos</div>
+</div>
+<div id="itens-ranking"></div>
+</div>
+
+</div>
+
+
+<!-- PAGAMENTO / BAIRRO -->
+<div class="stats-grid-2">
+
+<div class="card">
+<div class="card-header">
+<div class="card-title">Formas de Pagamento</div>
+</div>
+<div id="formas-pagamento"></div>
+</div>
+
+<div class="card">
+<div class="card-header">
+<div class="card-title">Entregas por Bairro</div>
+</div>
+<div id="bairros-ranking"></div>
+</div>
+
+</div>
+
+
+<!-- LISTA PEDIDOS -->
+<div class="card">
+
+<div class="card-header">
+<div class="card-title">Todos os Pedidos do Dia</div>
+</div>
+
 <div id="lista-pedidos-stats"></div>
 
 </div>
 
+</div>
+
 </section>
-
-
-<script>
-
-function openPage(page){
-
-document.querySelectorAll(".page").forEach(p=>{
-p.classList.remove("active")
-})
-
-document.getElementById("page-"+page).classList.add("active")
-
-}
-
-</script>
-
-
-<script type="module" src="js/app.js"></script>
-<script type="module" src="js/cozinha.js"></script>
-<script type="module" src="js/stats.js"></script>
-
-</body>
-</html>
