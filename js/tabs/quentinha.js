@@ -1,11 +1,11 @@
 // ============================================================
 //  quentinha.js — Aba de pedido de quentinha
 // ============================================================
-import { getCardapio, saveCardapio, novoPedido, formatarMoeda, registrarPedidoNoCliente, hoje } from './db.js';
+import { getCardapio, saveCardapio, novoPedido, formatarMoeda, registrarPedidoNoCliente, hoje } from '../db.js';
 import { abrirModalCliente } from './cliente.js';
-import { refreshSidebar } from './pedido-list.js';
-import { imprimirPedido } from './impressao.js';
-import { toast } from './utils.js';
+import { refreshSidebar } from '../modules/pedido-list.js';
+import { imprimirPedido } from '../modules/impressao.js';
+import { toast } from '../utils.js';
 
 const OBS_RAPIDAS = ['Sem cebola','Sem alho','Sem pimenta','Pouco sal','Bem passado','Mal passado','Sem arroz','Sem feijão','Capricha no feijão','Capricha na carne'];
 
@@ -333,7 +333,7 @@ async function confirmarPedido() {
 
 function abrirConfigCardapio() {
   // Importação dinâmica para não circular
-  import('./cardapio-modal.js').then(m => m.abrirModalCardapio(() => renderQuentinha()));
+  import('../modules/cardapio-modal.js').then(m => m.abrirModalCardapio(() => renderQuentinha()));
 }
 
 function getConfig_proteinas() {

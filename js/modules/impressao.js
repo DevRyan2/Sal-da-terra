@@ -1,7 +1,7 @@
 // ============================================================
 //  impressao.js — Geração e impressão de nota
 // ============================================================
-import { getConfig, formatarMoeda, formatarHora } from './db.js';
+import { getConfig, formatarMoeda, formatarHora } from '../db.js';
 
 export function imprimirPedido(pedido) {
   const cfg = getConfig();

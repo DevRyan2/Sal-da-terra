@@ -3,8 +3,8 @@
 // ============================================================
 import { getCardapio, saveCardapio, novoPedido, formatarMoeda, registrarPedidoNoCliente, hoje } from './db.js';
 import { abrirModalCliente } from './cliente.js';
-import { refreshSidebar } from './pedido-list.js';
-import { imprimirPedido } from './impressao.js';
+import { refreshSidebar } from './modules/pedido-list.js';
+import { imprimirPedido } from './modules/impressao.js';
 import { toast } from './utils.js';
 
 // ── Quentinha ───────────────────────────────────────────────
@@ -334,7 +334,7 @@ async function confirmarPedidoQuentinha() {
 
 function abrirConfigCardapio() {
   // Importação dinâmica para não circular
-  import('./cardapio-modal.js').then(m => m.abrirModalCardapio(() => renderQuentinha()));
+  import('./modules/cardapio-modal.js').then(m => m.abrirModalCardapio(() => renderQuentinha()));
 }
 
 function getConfig_proteinas() {

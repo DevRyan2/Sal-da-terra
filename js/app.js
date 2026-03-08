@@ -6,7 +6,7 @@ import { toast } from './utils.js';
 import { renderQuentinha } from './tabs.js';
 import { renderPrato, wirePratoEvents } from './tabs.js';
 import { renderBalcao } from './tabs.js';
-import { initSidebar, refreshSidebar } from './pedido-list.js';
+import { initSidebar, refreshSidebar } from './modules/pedido-list.js';
 
 let _tabAtual = 'quentinha';
 

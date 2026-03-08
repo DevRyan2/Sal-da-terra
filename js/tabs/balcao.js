@@ -1,10 +1,10 @@
 // ============================================================
 //  balcao.js — Aba Balcão (PDV)
 // ============================================================
-import { getCardapio, saveCardapio, novoPedido, formatarMoeda, hoje } from './db.js';
-import { refreshSidebar } from './pedido-list.js';
-import { imprimirPedido } from './impressao.js';
-import { toast } from './utils.js';
+import { getCardapio, saveCardapio, novoPedido, formatarMoeda, hoje } from '../db.js';
+import { refreshSidebar } from '../modules/pedido-list.js';
+import { imprimirPedido } from '../modules/impressao.js';
+import { toast } from '../utils.js';
 
 const CATEGORIA_ICONS = { Bebida:'🥤', Sobremesa:'🍮', Salgado:'🥐', Lanche:'🥪', Outros:'📦' };
 

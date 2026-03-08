@@ -1,11 +1,11 @@
 // ============================================================
 //  prato.js — Aba Prato Feito
 // ============================================================
-import { getCardapio, saveCardapio, novoPedido, formatarMoeda, registrarPedidoNoCliente, hoje } from './db.js';
+import { getCardapio, saveCardapio, novoPedido, formatarMoeda, registrarPedidoNoCliente, hoje } from '../db.js';
 import { abrirModalCliente } from './cliente.js';
-import { refreshSidebar } from './pedido-list.js';
-import { imprimirPedido } from './impressao.js';
-import { toast } from './utils.js';
+import { refreshSidebar } from '../modules/pedido-list.js';
+import { imprimirPedido } from '../modules/impressao.js';
+import { toast } from '../utils.js';
 
 const OBS_RAPIDAS = ['Sem cebola','Sem alho','Sem pimenta','Pouco sal','Bem passado','Mal passado','Capricha','Porção extra'];
 
