@@ -1,7 +1,7 @@
 // ============================================================
 //  cliente.js — Busca e cadastro de cliente
 // ============================================================
-import { getCliente, saveCliente, getConfig, adicionarEnderecoCliente } from './db.js';
+import { getCliente, saveCliente, getConfig, adicionarEnderecoCliente } from '../db.js';
 
 let _resolve = null;
 let _currentCliente = null;

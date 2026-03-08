@@ -2,7 +2,7 @@
 //  tabs.js — Abas de pedido: Quentinha, Prato Feito, Balcão
 // ============================================================
 import { getCardapio, saveCardapio, novoPedido, formatarMoeda, registrarPedidoNoCliente, hoje } from './db.js';
-import { abrirModalCliente } from './cliente.js';
+import { abrirModalCliente } from './modules/cliente.js';
 import { refreshSidebar } from './modules/pedido-list.js';
 import { imprimirPedido } from './modules/impressao.js';
 import { toast } from './utils.js';
