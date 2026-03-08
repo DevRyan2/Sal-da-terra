@@ -4,11 +4,11 @@
 
 export const RESTAURANTE = {
   nome: "Restaurante Sal da Terra",
-  subtitulo: "Comida caseira de terça a sabado",
-  telefone: "(21) 99999-9999",
+  subtitulo: "Comida caseira",
+  telefone: "(21) 99941-6353",
   endereco: "Rua das Flores, 123 — Centro",
-  pixChave: "11.222.333/0001-44",    // CPF, CNPJ, email ou telefone
-  pixNome: "Restaurante Sal da Terra",
+  pixChave:"a1b38bb4-92ce-408b-819d-4cb5bbeea58d",    // CPF, CNPJ, email ou telefone
+  pixNome: "rc",
 };
 
 // ============================================================
