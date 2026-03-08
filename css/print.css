@@ -1,0 +1,64 @@
+/* ============================================================
+   NOTA FISCAL — Impressão térmica (80mm)
+   ============================================================ */
+
+#nota-impressao {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 0;
+    size: 80mm auto;
+  }
+
+  body > * { display: none !important; }
+  #nota-impressao { display: block !important; }
+  #toast-container { display: none !important; }
+
+  #nota-impressao {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #000;
+    background: #fff;
+    width: 80mm;
+    padding: 4mm 3mm;
+    line-height: 1.45;
+  }
+
+  .nota-center   { text-align: center; }
+  .nota-right    { text-align: right;  }
+  .nota-bold     { font-weight: bold;  }
+  .nota-grande   { font-size: 14px; font-weight: bold; }
+  .nota-media    { font-size: 12px; }
+  .nota-divider  { border-top: 1px dashed #000; margin: 4px 0; }
+  .nota-space    { height: 6px; }
+
+  .nota-linha {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .nota-linha .nome { flex: 1; }
+  .nota-linha .val  { white-space: nowrap; }
+
+  .nota-total-box {
+    border: 1px solid #000;
+    padding: 3px 6px;
+    margin: 4px 0;
+  }
+
+  .nota-pix-box {
+    border: 2px solid #000;
+    padding: 5px;
+    text-align: center;
+    margin: 6px 0;
+  }
+
+  .nota-footer {
+    text-align: center;
+    font-size: 9px;
+    margin-top: 6px;
+    color: #555;
+  }
+}
