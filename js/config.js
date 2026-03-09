@@ -7,7 +7,7 @@ export const RESTAURANTE = {
   subtitulo: "Comida caseira",
   telefone: "(21) 99941-6353",
   endereco: "brasil",
-  pixChave:"a1b38bb4-92ce-408b-819d-4cb5bbeea58d",    // CPF, CNPJ, email ou telefone
+  pixChave: "a1b38bb4-92ce-408b-819d-4cb5bbeea58d",
   pixNome: "rc",
 };
 
@@ -25,12 +25,12 @@ export const FIREBASE_URL = null;
 //  BAIRROS E TAXAS DE ENTREGA
 // ============================================================
 export const BAIRROS_PADRAO = [
-  { nome: "Centro",         taxa: 0    },
-  { nome: "Bairro Norte",   taxa: 3    },
-  { nome: "Bairro Sul",     taxa: 5    },
-  { nome: "Bairro Leste",   taxa: 5    },
-  { nome: "Bairro Oeste",   taxa: 7    },
-  { nome: "Distrito Ind.",  taxa: 10   },
+  { nome: "Centro",                   taxa: 0   },
+  { nome: "praça cruzeiro",           taxa: 3   },
+  { nome: "Bairro Sul",               taxa: 5   },
+  { nome: "Bairro Leste",             taxa: 5   },
+  { nome: "Bairro Oeste",             taxa: 7   },
+  { nome: "Distrito Ind.",            taxa: 10   },
 ];
 
 // ============================================================
@@ -68,14 +68,14 @@ export const ACOMPANHAMENTOS_PADRAO = [
 //  ITENS DE BALCÃO FIXOS (adicione conforme seu cardápio)
 // ============================================================
 export const BALCAO_PADRAO = [
-  { nome: "Refrigerante lata",   preco: 5,   categoria: "Bebida"    },
-  { nome: "Suco natural",        preco: 7,   categoria: "Bebida"    },
-  { nome: "Água mineral",        preco: 3,   categoria: "Bebida"    },
-  { nome: "Sobremesa do dia",    preco: 6,   categoria: "Sobremesa" },
-  { nome: "Pudim",               preco: 7,   categoria: "Sobremesa" },
-  { nome: "Brigadeiro",          preco: 3,   categoria: "Sobremesa" },
-  { nome: "Salgado frito",       preco: 4,   categoria: "Salgado"   },
-  { nome: "Pão de queijo",       preco: 3,   categoria: "Salgado"   },
+  { nome: "Refrigerante lata",          preco: 5,     categoria: "Bebida"     },
+  { nome: "Suco natural",               preco: 7,     categoria: "Bebida"     },
+  { nome: "Água mineral",               preco: 3,     categoria: "Bebida"     },
+  { nome: "Sobremesa do dia",           preco: 6,     categoria: "Sobremesa"  },
+  { nome: "Pudim",                      preco: 7,     categoria: "Sobremesa"  },
+  { nome: "Brigadeiro",                 preco: 3,     categoria: "Sobremesa"  },
+  { nome: "Salgado frito",              preco: 4,     categoria: "Salgado"    },
+  { nome: "Pão de queijo",              preco: 3,     categoria: "Salgado"    },
 ];
 
 // ============================================================
@@ -83,6 +83,6 @@ export const BALCAO_PADRAO = [
 // ============================================================
 export const TAMANHOS_QUENTINHA = [
   { sigla: "P", label: "Pequena", preco: 15 },
-  { sigla: "M", label: "Média",   preco: 18 },
-  { sigla: "G", label: "Grande",  preco: 22 },
+  { sigla: "M", label: "Média", preco: 18 },
+  { sigla: "G", label: "Grande", preco: 22 },
 ];

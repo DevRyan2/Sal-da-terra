@@ -644,7 +644,7 @@ async function confirmarPratoPedido() {
 }
 
 // ── Balcão ──────────────────────────────────────────────────
-const CATEGORIA_ICONS = { Bebida:'🥤', Sobremesa:'🍮', Salgado:'🥐', Lanche:'🥪', Outros:'📦' };
+const CATEGORIA_ICONS = { Bebida:'🥤', Sobremesa:'🍮', Lanche:'🥪', Outros:'📦' };
 
 let _cart_balcao = [];
 
@@ -713,9 +713,11 @@ export function renderBalcao() {
   // Eventos
   el.querySelectorAll('.pdv-item').forEach(item => {
     item.addEventListener('click', () => {
-      const id    = item.dataset.id;
+      const rawId = item.dataset.id;
       const nome  = item.dataset.nome;
       const preco = parseFloat(item.dataset.preco);
+      // Itens do BALCAO_PADRAO não têm id → usamos o nome como chave única
+      const id = (rawId && rawId !== 'undefined') ? rawId : nome;
       // Ver se já existe no carrinho
       const existe = _cart_balcao.find(x => x.id === id);
       if (existe) { existe.qty++; }
