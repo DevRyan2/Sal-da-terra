@@ -5,10 +5,10 @@
 export const RESTAURANTE = {
   nome: "Restaurante Sal da Terra",
   subtitulo: "Comida caseira",
-  telefone: "(21) 99941-6353",
+  telefone: "21998947031",
   endereco: "brasil",
-  pixChave: "a1b38bb4-92ce-408b-819d-4cb5bbeea58d",
-  pixNome: "rc",
+  pixChave: "21999294751",
+  pixNome: "Restaurante Sal da Terra",
 };
 
 // ============================================================

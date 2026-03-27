@@ -11,23 +11,6 @@
 .page.active{display:block}
 body{overflow-x:hidden}
 
-.kitchen-topbar{
-position:sticky;top:0;z-index:100;
-background:var(--card);border-bottom:1px solid var(--border);
-padding:12px 20px;display:flex;align-items:center;gap:16px}
-.kitchen-title{
-font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;
-font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
-#cozinha-counter{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--text2)}
-.btn-toggle-som{
-padding:6px 14px;border-radius:var(--r-sm);background:var(--card2);
-border:1px solid var(--border2);color:var(--text2);cursor:pointer;font-size:.85rem}
-.btn-toggle-som.ativo{background:rgba(245,166,35,.15);border-color:var(--accent);color:var(--accent)}
-.auto-badge{
-font-size:.72rem;color:var(--green);font-family:'JetBrains Mono',monospace;
-background:rgba(28,184,106,.12);border:1px solid rgba(28,184,106,.3);
-padding:2px 8px;border-radius:99px}
-
 .stats-topbar{
 position:sticky;top:0;z-index:100;background:var(--card);
 border-bottom:1px solid var(--border);padding:12px 20px;
@@ -44,6 +27,10 @@ font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent
 <!-- fora de qualquer section para o print.css funcionar -->
 <div id="nota-impressao"></div>
 <div id="toast-container"></div>
+<div id="cart-drawer-overlay"></div>
+<button id="btn-cart-mobile" aria-label="Abrir carrinho">
+  🛒 Carrinho <span id="cart-count-badge">0</span>
+</button>
 
 <!-- ================= SISTEMA ================= -->
 <section id="page-app" class="page active">
@@ -59,7 +46,6 @@ font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent
     <div class="topbar-actions">
       <div class="topbar-clock" id="topbar-clock">--:--:--</div>
       <button class="btn-icon" id="btn-abrir-stats" title="Estatísticas">📊</button>
-      <button class="btn-icon" id="btn-abrir-cozinha" title="Cozinha">👨‍🍳</button>
       <button class="btn-icon" id="btn-config-restaurante">⚙️</button>
     </div>
   </header>
@@ -88,23 +74,7 @@ font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent
 </section>
 
 
-<!-- ================= COZINHA ================= -->
-<section id="page-cozinha" class="page">
 
-<div class="kitchen-topbar">
-  <div class="kitchen-title">👨‍🍳 Cozinha</div>
-  <span id="cozinha-counter"></span>
-  <span class="auto-badge">● auto</span>
-  <button class="btn-toggle-som" id="btn-toggle-som">🔕 Som desligado</button>
-  <div style="margin-left:auto;display:flex;gap:8px">
-    <button class="btn-icon" id="btn-refresh-cozinha" title="Atualizar">↻</button>
-    <button class="btn-icon" id="btn-voltar-cozinha" title="Voltar">⬅</button>
-  </div>
-</div>
-
-<div id="kitchen-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:20px"></div>
-
-</section>
 
 
 <!-- ================= STATS ================= -->

@@ -7,7 +7,6 @@ import { renderQuentinha, renderPrato, wirePratoEvents, renderBalcao } from './t
 import { initSidebar, refreshSidebar } from './modules/pedido-list.js';
 
 let _tabAtual = 'quentinha';
-let _cozinhaInited = false;
 let _statsInited = false;
 
 // ── openPage — chamada pelos botões do topbar ─────────────────
@@ -16,7 +15,6 @@ window.openPage = function(page) {
   const section = document.getElementById(`page-${page}`);
   if (section) section.classList.add('active');
 
-  if (page === 'cozinha') _initCozinha();
   if (page === 'stats')   _initStats();
 };
 
@@ -47,11 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Botões do topbar — abrem as páginas internas
-  document.getElementById('btn-abrir-cozinha')?.addEventListener('click', () => openPage('cozinha'));
   document.getElementById('btn-abrir-stats')?.addEventListener('click',   () => openPage('stats'));
 
   // Botões voltar
-  document.getElementById('btn-voltar-cozinha')?.addEventListener('click', () => openPage('app'));
   document.getElementById('btn-voltar-stats')?.addEventListener('click',   () => openPage('app'));
 
   // Config do restaurante
@@ -66,6 +62,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Auto-refresh da sidebar a cada 30s
   setInterval(refreshSidebar, 30000);
+
+  // ── Drawer mobile do carrinho ─────────────────────────────
+  const cartPanel  = document.querySelector('.panel-right');
+  const fabBtn     = document.getElementById('btn-cart-mobile');
+  const overlay    = document.getElementById('cart-drawer-overlay');
+  const badge      = document.getElementById('cart-count-badge');
+
+  function abrirCartDrawer() {
+    cartPanel?.classList.add('open');
+    overlay?.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function fecharCartDrawer() {
+    cartPanel?.classList.remove('open');
+    overlay?.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  fabBtn?.addEventListener('click', abrirCartDrawer);
+  overlay?.addEventListener('click', fecharCartDrawer);
+
+  // Atualizar badge do FAB quando sidebar mudar
+  const badgeObserver = new MutationObserver(() => {
+    const countEl = document.querySelector('.orders-sidebar-title .badge-accent, .badge-accent');
+    if (countEl && badge) badge.textContent = countEl.textContent.trim() || '0';
+  });
+  if (cartPanel) badgeObserver.observe(cartPanel, { childList: true, subtree: true });
+
+  // Fechar drawer ao confirmar pedido (quando cart fica vazio)
+  document.addEventListener('click', e => {
+    if (e.target?.id?.includes('confirmar')) {
+      setTimeout(fecharCartDrawer, 400);
+    }
+  });
 });
 
 function switchTab(tab) {
@@ -79,19 +109,6 @@ function switchTab(tab) {
   if (tab === 'quentinha') renderQuentinha();
   if (tab === 'prato')     { renderPrato(); wirePratoEvents(); }
   if (tab === 'balcao')    renderBalcao();
-}
-
-// ── Lazy init da Cozinha ──────────────────────────────────────
-async function _initCozinha() {
-  if (_cozinhaInited) {
-    // Já iniciada: só forçar refresh
-    const mod = await import('./cozinha.js');
-    mod.refreshCozinha?.();
-    return;
-  }
-  _cozinhaInited = true;
-  const mod = await import('./cozinha.js');
-  mod.initCozinha?.();
 }
 
 // ── Lazy init de Stats ────────────────────────────────────────
