@@ -1,30 +1,39 @@
 /* ============================================================
-   NOTA FISCAL — Impressão térmica (80mm) — 3 vias
-   SEM page-break (impressora térmica = papel contínuo)
+   NOTA FISCAL — Impressora térmica POS-58 (58mm)
+   3 vias sem page-break (papel contínuo)
    ============================================================ */
 
 #nota-impressao { display: none; }
 
 @media print {
-  @page { margin: 0; size: 80mm auto; }
-
-  body > * { display: none !important; }
-  #nota-impressao { display: block !important; }
-  #toast-container { display: none !important; }
-
-  #nota-impressao {
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    color: #000;
-    background: #fff;
-    width: 80mm;
-    line-height: 1.45;
-    /* sem altura fixa — cresce com o conteúdo */
+  @page {
+    margin: 0;
+    size: 58mm auto;
   }
 
-  /* Cada via: só padding, sem page-break */
+  /* Esconder TUDO menos a nota */
+  body > * { display: none !important; }
+
+  /* Mostrar só a nota */
+  #nota-impressao {
+    display: block !important;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    color: #000 !important;
+    background: #fff !important;
+    width: 58mm;
+    line-height: 1.4;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Toast nunca aparece */
+  #toast-container { display: none !important; }
+
+  /* Cada via: padding interno, sem quebra de página */
   .via-bloco {
-    padding: 4mm 3mm 2mm;
+    padding: 3mm 2mm 2mm;
+    width: 58mm;
   }
 
   /* Linha de corte entre vias */
@@ -34,32 +43,32 @@
     padding-top: 3mm;
   }
   .via-bloco + .via-bloco::before {
-    content: "✂ - - - - - - - - - - - - - - - ✂";
+    content: "- - - - - - - - - - - - -";
     display: block;
     text-align: center;
-    font-size: 9px;
-    letter-spacing: .06em;
+    font-size: 8px;
+    letter-spacing: .04em;
     color: #555;
-    margin-bottom: 4mm;
+    margin-bottom: 3mm;
   }
 
   /* Título da via */
   .via-titulo {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: .08em;
+    letter-spacing: .06em;
     border-bottom: 2px solid #000;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     padding-bottom: 2px;
   }
 
   /* Utilitários */
-  .nota-center   { text-align: center; }
-  .nota-right    { text-align: right;  }
-  .nota-bold     { font-weight: bold;  }
-  .nota-grande   { font-size: 14px; font-weight: bold; }
-  .nota-divider  { border: none; border-top: 1px dashed #000; margin: 4px 0; }
+  .nota-center  { text-align: center; }
+  .nota-right   { text-align: right; }
+  .nota-bold    { font-weight: bold; }
+  .nota-grande  { font-size: 13px; font-weight: bold; }
+  .nota-divider { border: none; border-top: 1px dashed #000; margin: 3px 0; }
 
   .nota-linha {
     display: flex;
@@ -71,15 +80,23 @@
 
   .nota-total-box {
     border: 1px solid #000;
-    padding: 3px 6px;
-    margin: 4px 0;
+    padding: 2px 5px;
+    margin: 3px 0;
   }
 
   .nota-footer {
     text-align: center;
-    font-size: 9px;
-    margin-top: 5px;
+    font-size: 8px;
+    margin-top: 4px;
     color: #555;
     padding-bottom: 4mm;
+  }
+
+  /* Forçar texto preto e fundo branco em tudo */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
 }
