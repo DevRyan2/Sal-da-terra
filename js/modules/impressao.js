@@ -196,7 +196,5 @@ export async function imprimirPedido(pedido) {
     <div class="via-bloco">${viaCliente(pedido, cfg)}</div>
   `;
 
-  // Pequeno delay pra garantir que o DOM renderizou antes de imprimir
-  await new Promise(r => setTimeout(r, 120));
   window.print();
 }
