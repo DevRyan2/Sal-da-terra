@@ -1,6 +1,6 @@
 /* ============================================================
    SISTEMA DE PEDIDOS — Design System
-   Responsivo: 320px (iPhone 5s) → TV 4K
+   Mobile-first portrait mode
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -30,8 +30,6 @@
   --r:         10px;
   --r-sm:      6px;
   --r-lg:      16px;
-
-  /* Tamanho base — escala com a tela */
   --fs-base: clamp(13px, 1.5vw, 16px);
 }
 
@@ -77,10 +75,10 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 .topbar {
   background: var(--card);
   border-bottom: 1px solid var(--border);
-  padding: 0 clamp(10px, 2vw, 24px);
+  padding: 0 clamp(8px, 2vw, 24px);
   display: flex;
   align-items: center;
-  gap: clamp(8px, 1.5vw, 20px);
+  gap: clamp(6px, 1.5vw, 16px);
   height: clamp(48px, 7vh, 60px);
   position: relative;
   z-index: 100;
@@ -88,7 +86,7 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 }
 .topbar-logo {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(.95rem, 2vw, 1.35rem);
+  font-size: clamp(.9rem, 2vw, 1.3rem);
   font-weight: 800;
   color: var(--accent);
   text-transform: uppercase;
@@ -96,15 +94,14 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
   white-space: nowrap;
   flex-shrink: 0;
 }
-.topbar-logo span {
+.topbar-logo .logo-nome {
   color: var(--text2);
   font-weight: 400;
-  margin-left: 4px;
   font-size: .8em;
 }
 .topbar-tabs {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   flex: 1;
   overflow-x: auto;
   scrollbar-width: none;
@@ -113,11 +110,11 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 .topbar-tabs::-webkit-scrollbar { display: none; }
 .tab-btn {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(.82rem, 1.8vw, 1rem);
+  font-size: clamp(.78rem, 1.8vw, 1rem);
   font-weight: 700;
-  letter-spacing: .04em;
+  letter-spacing: .03em;
   text-transform: uppercase;
-  padding: clamp(5px,1vh,8px) clamp(10px,1.5vw,18px);
+  padding: clamp(5px,1vh,8px) clamp(8px,1.5vw,16px);
   border-radius: var(--r-sm);
   background: transparent;
   color: var(--text2);
@@ -131,14 +128,14 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 
 .topbar-actions {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   margin-left: auto;
   flex-shrink: 0;
   align-items: center;
 }
 .topbar-clock {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(.7rem, 1.2vw, .85rem);
+  font-size: clamp(.68rem, 1.2vw, .85rem);
   color: var(--text3);
   white-space: nowrap;
 }
@@ -239,13 +236,17 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
   text-transform: uppercase;
   letter-spacing: .06em;
   color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
 }
 .card-title .dot {
   display: inline-block;
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--accent);
-  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -351,7 +352,7 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 .status-cancelado { background: rgba(255,77,46,.18);   color: var(--hot); }
 
 /* ═══════════════════════════════════════════════════════════
-   CHIPS (proteínas, acompanhamentos)
+   CHIPS
    ═══════════════════════════════════════════════════════════ */
 .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
 .chip {
@@ -491,7 +492,7 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 /* ═══════════════════════════════════════════════════════════
    PDV BALCÃO
    ═══════════════════════════════════════════════════════════ */
-.pdv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(110px,15vw,150px), 1fr)); gap: clamp(8px,1.2vw,12px); }
+.pdv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(100px,15vw,150px), 1fr)); gap: clamp(8px,1.2vw,12px); }
 .pdv-item {
   background: var(--card2);
   border: 1px solid var(--border2);
@@ -650,13 +651,13 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 
 .qty-stepper { display: flex; align-items: center; gap: 4px; }
 .qty-btn {
-  width: clamp(28px,4vw,34px);
-  height: clamp(28px,4vw,34px);
+  width: clamp(32px,4vw,38px);
+  height: clamp(32px,4vw,38px);
   border-radius: var(--r-sm);
   background: var(--card2);
   border: 1px solid var(--border2);
   color: var(--text);
-  font-size: 1rem;
+  font-size: 1.1rem;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   transition: all .15s;
@@ -681,7 +682,7 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 .payment-opt:hover { border-color: var(--accent); }
 .payment-opt.selected { background: rgba(245,166,35,.1); border-color: var(--accent); color: var(--accent); }
 .payment-opt .ico { font-size: clamp(1.1rem,2.5vw,1.3rem); margin-bottom: 4px; }
-.payment-opt .lab { font-size: clamp(.65rem,1vw,.75rem); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+.payment-opt .lab { font-size: clamp(.62rem,1vw,.75rem); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
 
 /* ═══════════════════════════════════════════════════════════
    ESTATÍSTICAS
@@ -756,6 +757,219 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 .w-full { width: 100%; }
 
 /* ═══════════════════════════════════════════════════════════
+   ABA PAPEL — Tabela de preços + pedidos formatados
+   ═══════════════════════════════════════════════════════════ */
+.papel-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+}
+.papel-card-titulo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.papel-secao {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text3);
+  margin: 12px 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.papel-preco-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 6px;
+  border-radius: var(--r-sm);
+  font-size: .92rem;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  gap: 8px;
+}
+.papel-preco-linha:hover { background: var(--card2); }
+.papel-preco-linha.esgotado { opacity: .4; text-decoration: line-through; }
+.papel-valor {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Resumo rápido do dia */
+.papel-resumo-dia {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.papel-resumo-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 10px 8px;
+  text-align: center;
+}
+.papel-resumo-item.destaque { border-color: var(--accent); background: rgba(245,166,35,.06); }
+.papel-resumo-item.verde { border-color: var(--green); background: rgba(28,184,106,.06); }
+.papel-resumo-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.papel-resumo-item.verde .papel-resumo-num { color: var(--green); font-size: .88rem; }
+.papel-resumo-lab {
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* Pedidos do dia no papel */
+.papel-pedido {
+  padding: 10px;
+  border-radius: var(--r);
+  border: 1px solid var(--border2);
+  margin-bottom: 8px;
+  position: relative;
+}
+.papel-pedido.status-borda-novo     { border-left: 3px solid #5CA8FF; }
+.papel-pedido.status-borda-preparo  { border-left: 3px solid var(--accent); }
+.papel-pedido.status-borda-pronto   { border-left: 3px solid var(--green); }
+.papel-pedido.status-borda-entregue { border-left: 3px solid var(--border2); opacity: .7; }
+
+.papel-pedido-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.papel-pedido-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .85rem;
+  color: var(--text3);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.papel-pedido-cliente {
+  font-weight: 700;
+  font-size: .95rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.papel-pedido-itens {
+  margin-bottom: 6px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.papel-item-linha {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: .88rem;
+  padding: 2px 0;
+}
+.papel-item-qty {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 22px;
+  flex-shrink: 0;
+}
+.papel-item-nome {
+  flex: 1;
+  min-width: 0;
+}
+.papel-item-preco {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--text2);
+  white-space: nowrap;
+}
+.papel-pedido-rodape {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78rem;
+  color: var(--text3);
+  flex-wrap: wrap;
+}
+.papel-pedido-total {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-left: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MODAL EDITAR PEDIDO — linhas de item editáveis
+   ═══════════════════════════════════════════════════════════ */
+.edit-item-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px;
+  background: var(--card2);
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+}
+.edit-item-nome {
+  font-weight: 600;
+  font-size: .9rem;
+  margin-bottom: 2px;
+}
+.edit-item-controles {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.edit-label {
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text3);
+  display: block;
+  margin-bottom: 3px;
+}
+.edit-subtotal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-align: right;
+  padding-bottom: 2px;
+}
+.edit-input-qty, .edit-input-preco {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════
    STATS PAGE
    ═══════════════════════════════════════════════════════════ */
 .stats-body { padding: clamp(12px,2vw,20px); max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: clamp(14px,2vw,20px); }
@@ -786,8 +1000,7 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
 }
 
 /* ═══════════════════════════════════════════════════════════
-   RESPONSIVO — MOBILE  ≤ 768px
-   Panel-right vira drawer bottom
+   RESPONSIVO — MOBILE  ≤ 768px  (retrato, em pé)
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   #app { grid-template-rows: auto 1fr; }
@@ -800,16 +1013,15 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
   .panel-left {
     padding: 10px;
     gap: 10px;
-    /* espaço pro FAB do carrinho no fundo */
-    padding-bottom: 80px;
+    padding-bottom: 90px; /* espaço pro FAB */
   }
 
-  /* Panel-right vira drawer que sobe por baixo */
+  /* Panel-right vira drawer que sobe */
   .panel-right {
     position: fixed;
     inset: auto 0 0;
-    height: 85vh;
-    height: 85dvh;
+    height: 88vh;
+    height: 88dvh;
     border-left: none;
     border-top: 2px solid var(--accent);
     border-radius: 18px 18px 0 0;
@@ -817,10 +1029,11 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
     transform: translateY(100%);
     box-shadow: 0 -8px 40px rgba(0,0,0,.6);
     overflow-y: auto;
+    transition: transform .3s ease;
   }
   .panel-right.open { transform: translateY(0); }
 
-  /* Puxador visual no topo do drawer */
+  /* Puxador */
   .panel-right::before {
     content: '';
     display: block;
@@ -835,11 +1048,15 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
   /* Mostrar FAB */
   #btn-cart-mobile { display: flex; }
 
-  /* Topbar compacta */
-  .topbar { gap: 8px; padding: 0 10px; height: 50px; }
-  .topbar-logo span { display: none; }
-  .topbar-clock { display: none; }
-  .tab-btn { padding: 5px 8px; font-size: .8rem; }
+  /* Topbar compacta — esconder logo texto pra caber 4 abas */
+  .topbar { gap: 6px; padding: 0 8px; height: 52px; }
+  .topbar-logo .logo-nome { display: none; }
+
+  /* Relógio compacto */
+  .topbar-clock { font-size: .68rem; }
+
+  /* Abas menores */
+  .tab-btn { padding: 5px 7px; font-size: .75rem; letter-spacing: .01em; }
 
   /* Fields em coluna única */
   .field-row-2, .field-row-3 { grid-template-columns: 1fr; }
@@ -847,7 +1064,7 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
   /* Pagamento em 2 colunas */
   .payment-opts { grid-template-columns: repeat(2, 1fr); }
 
-  /* Tamanhos quentinha: lado a lado sempre */
+  /* Tamanhos quentinha: lado a lado */
   .size-cards { grid-template-columns: repeat(3, 1fr); }
 
   /* Modal tela cheia no mobile */
@@ -857,7 +1074,7 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
     border-radius: 18px 18px 0 0;
     max-height: 95vh;
     max-height: 95dvh;
-    padding: 20px 16px;
+    padding: 20px 14px;
   }
   .modal-lg, .modal-xl { max-width: 100%; }
 
@@ -865,16 +1082,24 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
   .stats-grid-2 { grid-template-columns: 1fr; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
 
-  /* Toast em baixo centralizado */
+  /* Toast centralizado */
   #toast-container { right: 50%; transform: translateX(50%); bottom: 90px; }
+
+  /* Papel resumo do dia — 2 colunas no mobile */
+  .papel-resumo-dia { grid-template-columns: repeat(2, 1fr); }
+
+  /* Edit modal controles em coluna */
+  .edit-item-row { flex-direction: column; gap: 8px; }
+  .edit-item-controles { flex-direction: row; width: 100%; }
+  .edit-item-controles > div { flex: 1; }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   RESPONSIVO — SMALL MOBILE  ≤ 400px (iPhone SE / 5s)
+   RESPONSIVO — SMALL MOBILE  ≤ 400px
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 400px) {
-  .topbar-logo { font-size: .88rem; }
-  .tab-btn { padding: 4px 7px; font-size: .75rem; }
+  .topbar-logo { font-size: 1.1rem; }
+  .tab-btn { padding: 4px 6px; font-size: .72rem; }
   .size-card .sigla { font-size: 1.5rem; }
   .pdv-grid { grid-template-columns: repeat(2, 1fr); }
   .chip { padding: 5px 9px; font-size: .78rem; }
@@ -882,11 +1107,16 @@ h1,h2,h3,h4  { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .02e
   .btn-lg { padding: 10px 14px; font-size: .9rem; }
   .card { padding: 10px; }
   .payment-opts { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-  .payment-opt .lab { font-size: .62rem; }
+  .payment-opt .lab { font-size: .6rem; }
+  /* Esconde o relógio em telas muito pequenas */
+  .topbar-clock { display: none; }
+  /* Abas só com emoji em telas minúsculas */
+  .tab-btn { padding: 4px 5px; font-size: 0; }
+  .tab-btn::first-letter { font-size: 1.1rem; }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   RESPONSIVO — LARGE SCREENS  ≥ 1600px (TV / ultrawide)
+   RESPONSIVO — LARGE  ≥ 1600px
    ═══════════════════════════════════════════════════════════ */
 @media (min-width: 1600px) {
   :root { --fs-base: 17px; }

@@ -4,30 +4,41 @@
 import { getConfig, saveConfig, hoje, formatarMoeda } from './db.js';
 import { toast } from './utils.js';
 import { renderQuentinha, renderPrato, wirePratoEvents, renderBalcao } from './tabs.js';
+import { renderPapel } from './modules/papel.js';
 import { initSidebar, refreshSidebar } from './modules/pedido-list.js';
 
 let _tabAtual = 'quentinha';
 let _statsInited = false;
 
-// ── openPage — chamada pelos botões do topbar ─────────────────
+// ── openPage ─────────────────────────────────────────────────
 window.openPage = function(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const section = document.getElementById(`page-${page}`);
   if (section) section.classList.add('active');
-
-  if (page === 'stats')   _initStats();
+  if (page === 'stats') _initStats();
 };
 
 // ── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const cfg = getConfig();
-  document.querySelector('.topbar-logo').innerHTML = `${cfg.nome} <span>${cfg.subtitulo || ''}</span>`;
+  const logoEl = document.querySelector('.topbar-logo');
+  if (logoEl) {
+    const logoNome = logoEl.querySelector('.logo-nome');
+    if (logoNome) logoNome.textContent = cfg.nome;
+  }
   document.title = cfg.nome;
 
-  // Relógio
+  // Relógio — no mobile mostra só HH:MM pra economizar espaço
   const clk = document.getElementById('topbar-clock');
   if (clk) {
-    const tick = () => clk.textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const tick = () => {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      const isMobile = window.innerWidth <= 768;
+      clk.textContent = isMobile ? `${h}:${m}` : `${h}:${m}:${s}`;
+    };
     tick(); setInterval(tick, 1000);
   }
 
@@ -36,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Sidebar de pedidos (lado direito do layout principal)
+  // Sidebar de pedidos
   const sidebarEl = document.getElementById('sidebar-pedidos');
   if (sidebarEl) {
     initSidebar(pedido => {
@@ -44,13 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Botões do topbar — abrem as páginas internas
-  document.getElementById('btn-abrir-stats')?.addEventListener('click',   () => openPage('stats'));
-
-  // Botões voltar
-  document.getElementById('btn-voltar-stats')?.addEventListener('click',   () => openPage('app'));
-
-  // Config do restaurante
+  // Botões do topbar
+  document.getElementById('btn-abrir-stats')?.addEventListener('click', () => openPage('stats'));
+  document.getElementById('btn-voltar-stats')?.addEventListener('click', () => openPage('app'));
   document.getElementById('btn-config-restaurante')?.addEventListener('click', abrirConfigRestaurante);
 
   // Data inicial do stats
@@ -64,10 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(refreshSidebar, 30000);
 
   // ── Drawer mobile do carrinho ─────────────────────────────
-  const cartPanel  = document.querySelector('.panel-right');
-  const fabBtn     = document.getElementById('btn-cart-mobile');
-  const overlay    = document.getElementById('cart-drawer-overlay');
-  const badge      = document.getElementById('cart-count-badge');
+  const cartPanel = document.querySelector('.panel-right');
+  const fabBtn    = document.getElementById('btn-cart-mobile');
+  const overlay   = document.getElementById('cart-drawer-overlay');
+  const badge     = document.getElementById('cart-count-badge');
 
   function abrirCartDrawer() {
     cartPanel?.classList.add('open');
@@ -83,18 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
   fabBtn?.addEventListener('click', abrirCartDrawer);
   overlay?.addEventListener('click', fecharCartDrawer);
 
-  // Atualizar badge do FAB quando sidebar mudar
+  // Badge do FAB
   const badgeObserver = new MutationObserver(() => {
-    const countEl = document.querySelector('.orders-sidebar-title .badge-accent, .badge-accent');
+    const countEl = document.querySelector('.badge-accent');
     if (countEl && badge) badge.textContent = countEl.textContent.trim() || '0';
   });
   if (cartPanel) badgeObserver.observe(cartPanel, { childList: true, subtree: true });
 
-  // Fechar drawer ao confirmar pedido (quando cart fica vazio)
+  // Fechar drawer ao confirmar pedido
   document.addEventListener('click', e => {
     if (e.target?.id?.includes('confirmar')) {
       setTimeout(fecharCartDrawer, 400);
     }
+  });
+
+  // Na aba Papel, esconder o botão do carrinho (não tem carrinho lá)
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (fabBtn) {
+        fabBtn.style.display = btn.dataset.tab === 'papel' ? 'none' : '';
+      }
+    });
   });
 });
 
@@ -109,6 +125,7 @@ function switchTab(tab) {
   if (tab === 'quentinha') renderQuentinha();
   if (tab === 'prato')     { renderPrato(); wirePratoEvents(); }
   if (tab === 'balcao')    renderBalcao();
+  if (tab === 'papel')     renderPapel();
 }
 
 // ── Lazy init de Stats ────────────────────────────────────────
@@ -117,7 +134,6 @@ async function _initStats() {
   const dateVal = document.getElementById('stats-date')?.value || hoje();
   mod.renderStats?.(dateVal);
 
-  // Garante que o listener de data funcione sempre
   if (!_statsInited) {
     _statsInited = true;
     document.getElementById('stats-date')?.addEventListener('change', e => {
@@ -140,7 +156,7 @@ function abrirConfigRestaurante() {
   overlay.innerHTML = `
     <div class="modal modal-lg">
       <div class="modal-header">
-        <div class="modal-title">⚙️ Configurações do Restaurante</div>
+        <div class="modal-title">⚙️ Configurações</div>
         <button class="modal-close" id="close-cfg">✕</button>
       </div>
 
@@ -186,7 +202,7 @@ function abrirConfigRestaurante() {
 
       <div class="modal-footer">
         <button class="btn btn-ghost" id="cancel-cfg">Fechar</button>
-        <button class="btn btn-primary" id="save-cfg">✓ Salvar configurações</button>
+        <button class="btn btn-primary" id="save-cfg">✓ Salvar</button>
       </div>
     </div>
   `;
@@ -235,7 +251,8 @@ function abrirConfigRestaurante() {
       if (nome) novoCfg.bairros.push({ nome, taxa });
     });
     saveConfig(novoCfg);
-    document.querySelector('.topbar-logo').innerHTML = `${novoCfg.nome} <span>${novoCfg.subtitulo || ''}</span>`;
+    const logoNome = document.querySelector('.logo-nome');
+    if (logoNome) logoNome.textContent = novoCfg.nome;
     document.title = novoCfg.nome;
     fechar();
     toast('Configurações salvas!', 'success');
